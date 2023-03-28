@@ -1,5 +1,5 @@
-import { ref, computed } from 'vue';
 import { defineStore, acceptHMRUpdate } from 'pinia';
+import { debounce } from 'lodash-es';
 import {
   getMovies,
   getMovieShows,
@@ -7,120 +7,118 @@ import {
   bookPlace,
 } from '@/api/moviesApi.js';
 
-export const useMoviesStore = defineStore('moviesStore', () => {
-  const movies = ref([]);
-  const moviesLoading = ref(false);
-  const moviesParams = ref({
-    name: '',
-    genres: '',
-  });
+const DEBOUNCE_DELAY = 400;
 
-  const movie = ref(null);
-  const movieLoading = ref(false);
+export const useMoviesStore = defineStore('moviesStore', {
+  state: () => ({
+    movies: [],
+    moviesLoading: false,
+    moviesParams: {
+      name: '',
+      genres: '',
+    },
 
-  const movieShows = ref([]);
-  const movieShowsLoading = ref(false);
+    movie: null,
+    movieLoading: false,
 
-  const movieShow = ref(null);
-  const movieShowLoading = ref(false);
+    movieShows: [],
+    movieShowsLoading: false,
 
-  const checkFreePlacesLoading = ref(false);
-  const checkFreePlacesParams = ref({
-    movie_id: '61',
-    daytime: '10:50',
-    showdate: '2021-06-27',
-  });
+    movieShow: null,
+    movieShowLoading: false,
 
-  const bookPlaceLoading = ref(false);
-  const bookPlaceParams = ref({
-    movie_id: 61,
-    row: 9,
-    seat: 18,
-    showdate: '2021-06-27',
-    daytime: '10:50',
-  });
+    checkFreePlacesLoading: false,
+    checkFreePlacesParams: {
+      movie_id: 61,
+      daytime: '10:50',
+      showdate: '2021-06-27',
+    },
 
-  // const doubleCount = computed(() => count.value * 2);
+    bookPlaceLoading: false,
+    bookPlaceParams: {
+      movie_id: 61,
+      row: 9,
+      seat: 18,
+      showdate: '2021-06-27',
+      daytime: '10:50',
+    },
+  }),
 
-  async function getMoviesList() {
-    try {
-      moviesLoading.value = true;
-      const { data } = await getMovies(moviesParams.value);
+  actions: {
+    getMoviesList: debounce(async function () {
+      try {
+        this.moviesLoading = true;
+        const { data } = await getMovies(this.moviesParams);
 
-      movies.value = data.data;
-    } finally {
-      moviesLoading.value = false;
-    }
-  }
+        this.movies = data.data;
+      } finally {
+        this.moviesLoading = false;
+      }
+    }, DEBOUNCE_DELAY),
 
-  async function getMovie(movie_id) {
-    try {
-      movieLoading.value = true;
-      const { data } = await getMovies({ movie_id });
+    async setMoviesParams(params) {
+      this.moviesParams = {
+        ...this.moviesParams,
+        ...params,
+      };
+    },
 
-      movie.value = data.data;
-    } finally {
-      movieLoading.value = false;
-    }
-  }
+    async getMovie(movie_id) {
+      try {
+        this.movieLoading = true;
+        const { data } = await getMovies({ movie_id });
 
-  async function getMovieShowsList() {
-    try {
-      movieShowsLoading.value = true;
-      const { data } = await getMovieShows();
+        this.movie = data.data;
+      } finally {
+        this.movieLoading = false;
+      }
+    },
 
-      movieShows.value = data.data;
-    } finally {
-      movieShowsLoading.value = false;
-    }
-  }
+    async getMovieShowsList() {
+      try {
+        this.this.movieShowsLoading = true;
+        const { data } = await getMovieShows();
 
-  async function getMovieShow(movie_id) {
-    try {
-      movieShowLoading.value = true;
-      const { data } = await getMovieShows({ movie_id });
+        this.this.movieShows = data.data;
+      } finally {
+        this.this.movieShowsLoading = false;
+      }
+    },
 
-      movieShow.value = data.data;
-    } finally {
-      movieShowLoading.value = false;
-    }
-  }
+    async getMovieShow(movie_id) {
+      try {
+        this.movieShowLoading = true;
+        const { data } = await getMovieShows({ movie_id });
 
-  async function checkFree() {
-    try {
-      checkFreePlacesLoading.value = true;
-      const { data } = await checkFreePlaces(checkFreePlacesParams.value);
+        this.movieShow = data.data;
+      } finally {
+        this.movieShowLoading = false;
+      }
+    },
 
-      return data;
-    } finally {
-      checkFreePlacesLoading.value = false;
-    }
-  }
+    async checkFree() {
+      try {
+        this.checkFreePlacesLoading = true;
+        const { data } = await checkFreePlaces(this.checkFreePlacesParams);
 
-  async function bookPlaceTicket() {
-    try {
-      bookPlaceLoading.value = true;
-      const { data, headers } = await bookPlace(bookPlaceParams.value);
+        return data;
+      } finally {
+        this.checkFreePlacesLoading = false;
+      }
+    },
 
-      console.log('bookPlaceTicket headers', headers);
-      console.log('bookPlaceTicket data', data);
-    } finally {
-      bookPlaceLoading.value = false;
-    }
-  }
+    async bookPlaceTicket() {
+      try {
+        this.bookPlaceLoading = true;
+        const { data, headers } = await bookPlace(this.bookPlaceParams);
 
-  return {
-    getMovie,
-    getMoviesList,
-    getMovieShowsList,
-    getMovieShow,
-    checkFree,
-    bookPlaceTicket,
-    moviesLoading,
-    movieLoading,
-    movies,
-    movie,
-  };
+        console.log('bookPlaceTicket headers', headers);
+        console.log('bookPlaceTicket data', data);
+      } finally {
+        this.bookPlaceLoading = false;
+      }
+    },
+  },
 });
 
 if (import.meta.hot)

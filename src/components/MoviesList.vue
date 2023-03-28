@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { VDataTable } from 'vuetify/labs/components';
 import { useMoviesStore } from '@/stores/moviesStore.js';
 import BaseSearch from '@/components/base/BaseSearch.vue';
@@ -11,7 +11,17 @@ const moviesStore = useMoviesStore();
 moviesStore.getMoviesList();
 
 const search = ref('');
-const movieName = ref('');
+
+watch(search, (value) => {
+  moviesStore.setMoviesParams({ name: value });
+});
+
+watch(
+  moviesStore.$state.moviesParams,
+  () => moviesStore.getMoviesList(),
+  { deep: true },
+);
+
 const isShowDialog = ref(false);
 const chosenMovie = ref({});
 
@@ -39,23 +49,10 @@ const headers = ref([
   },
 ]);
 
-// const filteredTodos = computed(() => {
-//   if (!search.value) {
-//     return todosStore.todos;
-//   }
-//
-//   return todosStore.todos.filter(({ title }) => title.includes(search.value));
-// });
-//
 const handleClickRow = async ({ target }, { item }) => {
   chosenMovie.value = item.raw;
   isShowDialog.value = true;
 };
-
-const handleGenre = (genre) => {
-  return MOVIE_CONSTANTS_CONFIG[genre].text;
-};
-
 </script>
 
 <template>
@@ -65,10 +62,14 @@ const handleGenre = (genre) => {
   >
     <v-expand-transition>
       <v-row dense align="center">
-        <v-col cols="6" class="pa-4">
+        <v-col cols="5" class="pa-4 mr-auto">
           <BaseSearch
             v-model="search"
           />
+        </v-col>
+
+        <v-col cols="5" class="pa-4">
+          <v-select/>
         </v-col>
       </v-row>
     </v-expand-transition>
