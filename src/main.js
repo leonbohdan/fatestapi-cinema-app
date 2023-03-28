@@ -3,7 +3,7 @@ import { createPinia } from 'pinia';
 import App from '@/App.vue';
 import '@mdi/font/css/materialdesignicons.css';
 
-import '@/main.css';
+import '@/assets/main.css';
 
 const pinia = createPinia();
 

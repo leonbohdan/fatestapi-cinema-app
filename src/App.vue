@@ -1,5 +1,9 @@
 <script setup>
+import { useMoviesStore } from '@/stores/moviesStore.js';
 
+const moviesStore = useMoviesStore();
+
+moviesStore.getMoviesList();
 </script>
 
 <template>
