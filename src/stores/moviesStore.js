@@ -77,21 +77,23 @@ export const useMoviesStore = defineStore('moviesStore', {
 
     async getMovieShowsList() {
       try {
-        this.this.movieShowsLoading = true;
+        this.movieShowsLoading = true;
         const { data } = await getMovieShows();
 
-        this.this.movieShows = data.data;
+        this.movieShows = data.data;
       } finally {
-        this.this.movieShowsLoading = false;
+        this.movieShowsLoading = false;
       }
     },
 
     async getMovieShow(movie_id) {
+      this.movieShowLoading = true;
+
       try {
-        this.movieShowLoading = true;
         const { data } = await getMovieShows({ movie_id });
 
-        this.movieShow = data.data;
+        // this.movieShow = data.data;
+        return data.data;
       } finally {
         this.movieShowLoading = false;
       }

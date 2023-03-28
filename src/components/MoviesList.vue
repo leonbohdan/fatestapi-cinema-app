@@ -28,8 +28,10 @@ watch(
   { deep: true },
 );
 
-const isShowDialog = ref(false);
+const isShowMovieInfo = ref(false);
+const isShowMovieSessions = ref(false);
 const chosenMovie = ref({});
+const chosenMovieSessions = ref({});
 
 const headers = ref([
   {
@@ -55,9 +57,25 @@ const headers = ref([
   },
 ]);
 
-const handleClickRow = async ({ target }, { item }) => {
-  chosenMovie.value = item.raw;
-  isShowDialog.value = true;
+const showMovieInfo = async (raw) => {
+  chosenMovie.value = raw;
+
+  chosenMovieSessions.value = await moviesStore.getMovieShow(raw.id);
+
+  isShowMovieInfo.value = true;
+};
+
+const showMovieSessins = async (raw) => {
+  chosenMovie.value = raw;
+
+  // await moviesStore.getMovieShow(raw.id);
+  //
+  isShowMovieSessions.value = true;
+};
+
+const bookTicket = async (raw) => {
+  console.log('bookTicket', raw);
+  // isShowDialog.value = true;
 };
 </script>
 
@@ -95,8 +113,11 @@ const handleClickRow = async ({ target }, { item }) => {
       :items="moviesStore.movies"
       :search="search"
       item-value="id"
-      @click:row="handleClickRow"
     >
+      <template #item.name="{ item }">
+        <span v-html="item.props.title.name"/>
+      </template>
+
       <template #item.genre="{ item }">
         <v-chip>
           {{ MOVIE_CONSTANTS_CONFIG[item.props.title.genre].text }}
@@ -112,25 +133,39 @@ const handleClickRow = async ({ target }, { item }) => {
         </v-avatar>
       </template>
 
-      <template #item.actions>
-        <v-icon
+      <template #item.actions="{ item }">
+        <v-btn
+          icon
           size="small"
-          class="me-2"
+          elevation="0"
+          @click="showMovieInfo(item.props.title)"
         >
-          mdi-pencil
-        </v-icon>
+          <v-icon icon="mdi-information-outline"/>
+        </v-btn>
 
-        <v-icon
+        <v-btn
+          icon
           size="small"
+          elevation="0"
+          @click="showMovieSessins(item.props.title)"
         >
-          mdi-delete
-        </v-icon>
+          <v-icon icon="mdi-filmstrip"/>
+        </v-btn>
+
+        <!--        <v-btn-->
+        <!--          icon-->
+        <!--          size="small"-->
+        <!--          elevation="0"-->
+        <!--          @click="bookTicket(item.props.title)"-->
+        <!--        >-->
+        <!--          <v-icon icon="mdi-ticket-confirmation"/>-->
+        <!--        </v-btn>-->
       </template>
     </VDataTable>
   </v-card>
 
   <BaseDialog
-    v-model="isShowDialog"
+    v-model="isShowMovieInfo"
     :title="chosenMovie.name"
   >
     <v-row>
@@ -142,6 +177,40 @@ const handleClickRow = async ({ target }, { item }) => {
 
       <v-col cols="6" class="p-0">
         <div class="pl-2" v-html="chosenMovie.additional"/>
+      </v-col>
+    </v-row>
+
+    <div class="d-flex align-center justify-center my-4">
+      <v-chip text="Sessions" color="primary"/>
+    </div>
+
+    <v-row>
+      <v-col cols="12">
+        {{ chosenMovieSessions }}
+      </v-col>
+    </v-row>
+  </BaseDialog>
+
+  <BaseDialog
+    v-model="isShowMovieSessions"
+    :title="chosenMovie.name"
+  >
+    <v-row>
+      <v-col cols="6">
+        <!--        <v-img :src="chosenMovie.image" :lazy-src="chosenMovie.image" min-height="400px" class="mb-2"/>-->
+
+        <!--        <div v-html="chosenMovie.description"/>-->
+        {{ moviesStore.movieShows }}
+      </v-col>
+
+      <v-col cols="6" class="p-0">
+        <!--        <div class="pl-2" v-html="chosenMovie.additional"/>-->
+      </v-col>
+    </v-row>
+
+    <v-row>
+      <v-col cols="12">
+        col
       </v-col>
     </v-row>
   </BaseDialog>

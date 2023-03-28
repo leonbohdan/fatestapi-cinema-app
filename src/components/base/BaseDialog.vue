@@ -30,7 +30,7 @@ const handleButtonClick = () => {
     >
       <v-card>
         <v-card-title v-if="title" class="px-6">
-          {{ title }}
+          <span v-html="title"/>
         </v-card-title>
 
         <v-divider/>
