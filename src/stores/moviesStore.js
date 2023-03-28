@@ -46,8 +46,9 @@ export const useMoviesStore = defineStore('moviesStore', {
 
   actions: {
     getMoviesList: debounce(async function () {
+      this.moviesLoading = true;
+
       try {
-        this.moviesLoading = true;
         const { data } = await getMovies(this.moviesParams);
 
         this.movies = data.data;

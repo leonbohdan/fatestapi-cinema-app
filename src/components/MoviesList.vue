@@ -4,11 +4,17 @@ import { VDataTable } from 'vuetify/labs/components';
 import { useMoviesStore } from '@/stores/moviesStore.js';
 import BaseSearch from '@/components/base/BaseSearch.vue';
 import BaseDialog from '@/components/base/BaseDialog.vue';
-import { MOVIE_CONSTANTS_CONFIG } from '@/constants/movie.constants.js';
+import { MOVIE_GENRES_FILTER, MOVIE_CONSTANTS_CONFIG } from '@/constants/movie.constants.js';
 
 const moviesStore = useMoviesStore();
 
 moviesStore.getMoviesList();
+
+const genre = ref(null);
+
+watch(genre, (value) => {
+  moviesStore.setMoviesParams({ genres: value });
+});
 
 const search = ref('');
 
@@ -17,7 +23,7 @@ watch(search, (value) => {
 });
 
 watch(
-  moviesStore.$state.moviesParams,
+  () => moviesStore.moviesParams,
   () => moviesStore.getMoviesList(),
   { deep: true },
 );
@@ -70,13 +76,14 @@ const handleClickRow = async ({ target }, { item }) => {
 
         <v-col cols="5" class="pa-4">
           <v-select
-            chips
+            v-model="genre"
             density="compact"
             variant="outlined"
             clearable
             hide-details
-            placeholder="Select genre"
-            :items="['e', 'd']"
+            label="Select genre"
+            :items="MOVIE_GENRES_FILTER"
+            @click:clear="genre = null"
           />
         </v-col>
       </v-row>

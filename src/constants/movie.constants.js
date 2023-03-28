@@ -33,3 +33,30 @@ export const MOVIE_CONSTANTS_CONFIG = Object.freeze({
     value: 5,
   },
 });
+
+export const MOVIE_GENRES_FILTER = Object.freeze([
+  {
+    title: 'Action',
+    value: 0,
+  },
+  {
+    title: 'Adventures',
+    value: 1,
+  },
+  {
+    title: 'Comedy',
+    value: 2,
+  },
+  {
+    title: 'Drama',
+    value: 3,
+  },
+  {
+    title: 'Horror',
+    value: 4,
+  },
+  {
+    title: 'Westerns',
+    value: 5,
+  },
+]);
