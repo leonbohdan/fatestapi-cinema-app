@@ -1,14 +1,7 @@
-# fatestapi-cinema-app
+# Vue 3 + Vite + Vuetify
 
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+- [Task](https://docs.google.com/document/d/1DIR-6q0ahwb1PzWkkZ_rl96iFgWKpJ-gzlErMP5OCaw)
+- [Preview](https://leonbohdan.github.io/fatestapi-cinema-app/)
 
 ## Project Setup
 
