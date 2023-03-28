@@ -120,8 +120,6 @@ const bookTicket = async (seat, row) => {
 
     const ticket = await moviesStore.bookPlaceTicket();
 
-    console.log('ticket', ticket);
-
     isBookTicket.value = true;
 
     setTimeout(() => {

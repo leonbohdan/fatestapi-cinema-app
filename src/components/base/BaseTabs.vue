@@ -1,7 +1,6 @@
 <script setup>
 import { ref } from 'vue';
 import MoviesList from '@/components/MoviesList.vue';
-import SessionsList from '@/components/SessionsList.vue';
 
 const tab = ref('todos');
 
@@ -9,10 +8,6 @@ const items = [
   {
     title: 'Movies',
     value: 'movies',
-  },
-  {
-    title: 'Sessions',
-    value: 'sessions',
   },
 ];
 </script>
@@ -36,10 +31,6 @@ const items = [
       <v-window v-model="tab">
         <v-window-item value="movies">
           <MoviesList/>
-        </v-window-item>
-
-        <v-window-item value="sessions">
-          <SessionsList/>
         </v-window-item>
       </v-window>
     </v-card-text>
