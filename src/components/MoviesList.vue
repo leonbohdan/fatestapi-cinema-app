@@ -69,7 +69,15 @@ const handleClickRow = async ({ target }, { item }) => {
         </v-col>
 
         <v-col cols="5" class="pa-4">
-          <v-select/>
+          <v-select
+            chips
+            density="compact"
+            variant="outlined"
+            clearable
+            hide-details
+            placeholder="Select genre"
+            :items="['e', 'd']"
+          />
         </v-col>
       </v-row>
     </v-expand-transition>
