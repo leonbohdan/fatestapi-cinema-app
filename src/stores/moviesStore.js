@@ -29,18 +29,18 @@ export const useMoviesStore = defineStore('moviesStore', {
 
     checkFreePlacesLoading: false,
     checkFreePlacesParams: {
-      movie_id: 61,
-      daytime: '10:50',
-      showdate: '2021-06-27',
+      movie_id: null,
+      daytime: '',
+      showdate: '',
     },
 
     bookPlaceLoading: false,
     bookPlaceParams: {
-      movie_id: 61,
-      row: 9,
-      seat: 18,
-      showdate: '2021-06-27',
-      daytime: '10:50',
+      movie_id: null,
+      row: null,
+      seat: null,
+      showdate: '',
+      daytime: '',
     },
   }),
 
@@ -65,8 +65,9 @@ export const useMoviesStore = defineStore('moviesStore', {
     },
 
     async getMovie(movie_id) {
+      this.movieLoading = true;
+
       try {
-        this.movieLoading = true;
         const { data } = await getMovies({ movie_id });
 
         this.movie = data.data;
@@ -76,8 +77,9 @@ export const useMoviesStore = defineStore('moviesStore', {
     },
 
     async getMovieShowsList() {
+      this.movieShowsLoading = true;
+
       try {
-        this.movieShowsLoading = true;
         const { data } = await getMovieShows();
 
         this.movieShows = data.data;
@@ -92,7 +94,8 @@ export const useMoviesStore = defineStore('moviesStore', {
       try {
         const { data } = await getMovieShows({ movie_id });
 
-        // this.movieShow = data.data;
+        this.movieShow = data.data;
+
         return data.data;
       } finally {
         this.movieShowLoading = false;
@@ -100,26 +103,41 @@ export const useMoviesStore = defineStore('moviesStore', {
     },
 
     async checkFree() {
+      this.checkFreePlacesLoading = true;
+
       try {
-        this.checkFreePlacesLoading = true;
         const { data } = await checkFreePlaces(this.checkFreePlacesParams);
 
-        return data;
+        return data.data;
       } finally {
         this.checkFreePlacesLoading = false;
       }
     },
 
-    async bookPlaceTicket() {
-      try {
-        this.bookPlaceLoading = true;
-        const { data, headers } = await bookPlace(this.bookPlaceParams);
+    async setPlacesParams(params) {
+      this.checkFreePlacesParams = {
+        ...this.checkFreePlacesParams,
+        ...params,
+      };
+    },
 
-        console.log('bookPlaceTicket headers', headers);
-        console.log('bookPlaceTicket data', data);
+    async bookPlaceTicket() {
+      this.bookPlaceLoading = true;
+
+      try {
+        const { data } = await bookPlace(this.bookPlaceParams);
+
+        return data.data;
       } finally {
         this.bookPlaceLoading = false;
       }
+    },
+
+    async setBookPlaceParams(params) {
+      this.bookPlaceParams = {
+        ...this.bookPlaceParams,
+        ...params,
+      };
     },
   },
 });

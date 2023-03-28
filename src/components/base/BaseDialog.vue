@@ -14,10 +14,11 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['update:model-value']);
+const emit = defineEmits(['update:model-value', 'close-dialog']);
 
 const handleButtonClick = () => {
   emit('update:model-value', false);
+  emit('close-dialog');
 };
 </script>
 
@@ -25,7 +26,7 @@ const handleButtonClick = () => {
   <div class="text-center">
     <v-dialog
       :model-value="modelValue"
-      width="700px"
+      width="800px"
       persistent
     >
       <v-card>
