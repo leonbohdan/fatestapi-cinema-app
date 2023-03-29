@@ -23,7 +23,7 @@ watch(genre, (value) => {
   moviesStore.setMoviesParams({ genres: value });
 });
 
-const search = ref('');
+const search = ref(null);
 
 watch(search, (value) => {
   moviesStore.setMoviesParams({ name: value });
@@ -120,11 +120,13 @@ const bookTicket = async (seat, row) => {
 
     const ticket = await moviesStore.bookPlaceTicket();
 
-    isBookTicket.value = true;
+    if (data) {
+      isBookTicket.value = true;
 
-    setTimeout(() => {
-      isBookTicket.value = false;
-    }, 2000);
+      setTimeout(() => {
+        isBookTicket.value = false;
+      }, 2000);
+    }
 
     isShowMovieSessions.value = false;
     handleCloseDialog();

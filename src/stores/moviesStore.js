@@ -14,8 +14,8 @@ export const useMoviesStore = defineStore('moviesStore', {
     movies: [],
     moviesLoading: false,
     moviesParams: {
-      name: '',
-      genres: '',
+      name: null,
+      genres: null,
     },
 
     movie: null,
@@ -30,8 +30,8 @@ export const useMoviesStore = defineStore('moviesStore', {
     checkFreePlacesLoading: false,
     checkFreePlacesParams: {
       movie_id: null,
-      daytime: '',
-      showdate: '',
+      daytime: null,
+      showdate: null,
     },
 
     bookPlaceLoading: false,
@@ -39,8 +39,8 @@ export const useMoviesStore = defineStore('moviesStore', {
       movie_id: null,
       row: null,
       seat: null,
-      showdate: '',
-      daytime: '',
+      showdate: null,
+      daytime: null,
     },
   }),
 
